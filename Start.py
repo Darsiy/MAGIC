@@ -1,4 +1,14 @@
 import random
+class Navk:
+    def __init__(self, func, level):
+        self.level = level
+        self.func = func
+
+    def deistvne(self, igrok, monstr):
+        self.func(igrok, monstr, self.level)
+
+    def level_up(self, g):
+        self.level += g
 class Persona:
     def __init__(self, textura, drevo, uroven, supersoundpack):
         self.textura = textura
@@ -14,7 +24,7 @@ class Persona:
         self.oburon = (self.sila + self.lovkost) * 10
         self.maguron = (self.intelect + self.shizn) * 10
         self.hsuperpoint = uroven# очки характеристик
-        self.megapoint = uroven / 5# очки навыков
+        self.megapoint = uroven // 5# очки навыков
         self.pd = uroven + self.sila + self.intelekt
         self.inventar = []
         self.snarasheinie = {'shlem': None, 'kirasa' : None, 'posoh_or_mech': None} # снаряжение персонажа(None значит нету)
