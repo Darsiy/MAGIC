@@ -30,6 +30,25 @@ class Persona:
             self.nxp *= 2
         x = random.choice(['shlem', 'kirasa', 'posoh', 'mech'])
         self.inventar.append(Snaraga(x, x+'_'+str(monstr.level)+'.jpg', monstr.level))
+
+    def odet_snaraga(self, snaraga):
+        t = snaraga.tip
+        if self.snarashenie[t] is None:
+            self.snarashenie[t] = snaraga
+            self.sila += snaraga.haracteristik[-1]
+            self.lovkost += snaraga.haracteristik[1]
+            self.intelekt += snaraga.haracteristik[0]
+            self.shizn += snaraga.haracteristik[2]
+            self.hp = self.shizn * 10
+        else:
+            self.inventar.append(self.snarashenie[t])
+            self.snarashenie[t] = snaraga
+            self.sila += snaraga.haracteristik[-1]
+            self.lovkost += snaraga.haracteristik[1]
+            self.intelekt += snaraga.haracteristik[0]
+            self.shizn += snaraga.haracteristik[2]
+            self.hp = self.shizn * 10
+        del self.inventar[self.inventar.index(snaraga)]
 class Monstr:
     def __init__(self, textura, level, soundpack):
         self.textura = textura
@@ -44,7 +63,7 @@ class Bitva_c_monstr:
         kd = igrok.pd
         while monstr.hp != 0 and igrok.hp != 0:
             for i in range(kd):
-                a = 0#не ноль а запрпос цифры навыка из предварительно показанного игроку списка, соответствующего списку выдаваемому igrok.getnav()
+                a = 0#не ноль а запрпос ноиера навыка из предварительно показанного игроку списка, соответствующего списку выдаваемому igrok.getnav()
                 vd[a - 1](monstr)
                 if monstr.hp > 0:
                     pass
