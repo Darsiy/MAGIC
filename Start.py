@@ -14,8 +14,22 @@ class Persona:
         self.oburon = (self.sila + self.lovkost) * 10
         self.maguron = (self.intelect + self.shizn) * 10
         self.hsuperpoint = uroven# очки характеристик
-        self.megapoin = uroven / 5# очки навыков
-        self.snarasheinie = {'shlem': None, 'kirasa' : None, 'posoh': None, 'kolco': [None for i in range(5)]} # снаряжение персонажа(None значит нету)
+        self.megapoint = uroven / 5# очки навыков
+        self.pd = uroven + self.sila + self.intelekt
+        self.inventar = []
+        self.snarasheinie = {'shlem': None, 'kirasa' : None, 'posoh_or_mech': None} # снаряжение персонажа(None значит нету)
+
+    def monstr_ubit(self, monstr):
+        hxp = monstr.dxp
+        self.xp -= hxp
+        while self.xp >= self.nxp:
+            self.uroven += 1
+            if self.uroven % 5 == 0:
+                self.megapoint += 1
+            self.hsuperpoint += 1
+            self.nxp *= 2
+        x = random.choice(['shlem', 'kirasa', 'posoh', 'mech'])
+        self.inventar.append(Snaraga(x, x+'_'+str(monstr.level)+'.jpg', monstr.level))
 class Monstr:
     def __init__(self, textura, level, soundpack):
         self.textura = textura
@@ -24,6 +38,36 @@ class Monstr:
         self.level = level
         self.uron = 2**level
         self.hp = 2**level * random.randint(1, 5)
+class Bitva_c_monstr:
+    def __init__(self, igrok, monstr):
+        vd = igrok.getnav()
+        kd = igrok.pd
+        while monstr.hp != 0 and igrok.hp != 0:
+            for i in range(kd):
+                a = 0#не ноль а запрпос цифры навыка из предварительно показанного игроку списка, соответствующего списку выдаваемому igrok.getnav()
+                vd[a - 1](monstr)
+                if monstr.hp > 0:
+                    pass
+                else:
+                    igrok.monstr_ubit(monstr)
+                    igrok.hp = igrok.shizn*10
+                    return 1
+            igrok.attack(monstr)
+            if igrok.hp <= 0:
+                igrok.hp = igrok.shizn*10
+                return 1#тут завершение боя, игрок не может умереть, если хп в ноль - битва завершается, игрок уходит, готовится, и возвращается
+class Snaraga:
+    def __init__(self, tip, textura, level):
+        self.tip = tip
+        if tip == 'kirasa':
+            i, l, sh, s = 0, -3, level, -1
+        elif tip == 'mech':
+            i, l, sh, s = -1, -1, 1, level
+        elif tip == 'posoh':
+            i, l, sh, s = level, -1, 0, 1
+        elif tip == 'shlem':
+            i, l, sh, s = level + 1, -1, level // 3, -1
+        self.haracteristik = [i, l, sh, s]
 class Drevo:
     def __init__(self, specialsoundpack):
         self.drevo = {'magic': [0, {'energy ball': [0, {'fireball': [0],
@@ -53,4 +97,5 @@ class Drevo:
                                     ]}
 #соундпаки - списки с музыкой, прогигрываемой при определённых ситуациях. soundpack = [получение урона, нанесение урона]\
 #        supersoundpack = [получение урона, нанесение урона, лечение, шаги, переход на новый уровень] specialsoundpack = [поднятие уровня навыка, изучение навыка]
+#картинки снаряги - тип('shlem' и т.д), '_', уровень, '.jpg'
         
