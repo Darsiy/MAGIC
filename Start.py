@@ -94,7 +94,7 @@ class Persona:
 
     def monstr_ubit(self, monstr):
         hxp = monstr.dxp
-        self.xp -= hxp
+        self.xp += hxp
         while self.xp >= self.nxp:
             self.uroven += 1
             if self.uroven % 5 == 0:
